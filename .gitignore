@@ -1,3 +1,4 @@
 project_one/
 project_two/
 venv_*/
+__pycache__/
