@@ -1,7 +1,7 @@
 from game.swords import SwordsSecond
 from random import shuffle, choice
 
-swords_names = [
+SWORDS_NAMES = [
 "Меч Смертівника", 
 "Драконобійчий Клинок", 
 "Стрілецька Сага", 
@@ -13,13 +13,25 @@ swords_names = [
 "Молот Богів",
 "Легендарний Лезо"]
 
+MAX_TURNS = 5
+
+def get_player_name(player_number: int) -> str:
+    """Функція для отримання імені гравця."""
+    return str(input(f"№{player_number} >>> Введіть ім'я гравця: "))
+
+def create_sword_for_player(player_name: str) -> SwordsSecond:
+    """Функція для створення меча для гравця з випадковою рідкісністю."""
+    sword_name = f"{choice(SWORDS_NAMES)} отритимав {player_name}"
+    sword = SwordsSecond.create_with_random_rarity(sword_name)
+    sword.player = player_name # тут ми задаємо динамічний атрибут, який буде вказувати якому гравцю належить даний меч
+    return sword
+
+
 if __name__ == "__main__":
-    player1 = str(input("Введіть імя гравця №1: "))
-    s1 = SwordsSecond.create_with_random_rarity(f"{choice(swords_names)} яким володіє {player1}")
-    s1.player = player1 # тут ми задаємо динамічний атрибут, який буде вказувати якому гравцю належить даний меч
-    player2 = str(input("Введіть імя гравця №2: "))
-    s2 = SwordsSecond.create_with_random_rarity(f"{choice(swords_names)} яким володіє {player2}")
-    s2.player = player2
+
+    s1 = create_sword_for_player(get_player_name("1"))
+    
+    s2 = create_sword_for_player(get_player_name("2"))
 
     print(f"""
     Гравець №1: {s1.player} володіє Мечем:\n{s1.info}
@@ -28,7 +40,7 @@ if __name__ == "__main__":
 
     players = [s1, s2] # згрупував Мечі гравціі у список
     shuffle(players) # помішав список щоб випадково визначити хто буду ходити першим
-    MAX_TURNS = 5
+    
     turn = 1 # починаємо з ходу 1
     #for turn in range(MAX_TURNS):
     while s1.vitality > 0 and s2.vitality > 0 and turn < MAX_TURNS:
