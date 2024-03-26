@@ -2,9 +2,11 @@ import unittest
 from unittest.mock import patch
 import app
 from game.swords import SwordsSecond
+from game.buff import Buff
 
 # Клас повинен починатись з слова Test
 class TestGame(unittest.TestCase):
+    """Тестуємо Базові компоненти гри, основний код запуски."""
         # Кожен тест є функцією, та повинен починатись з слова test
     def test_constants(self):
         """Тестуємо правильність задання константб в нас їх 2 (може бути і більше)"""
@@ -35,7 +37,38 @@ class TestGame(unittest.TestCase):
 
 
 class TestBuffs(unittest.TestCase):
-    pass
+    """Тестуємо бібліотеку яка реалізує бафи для Меча"""
+    def setUp(self) -> None:
+        return super().setUp()
+    
+    def test_apply_sharpening(self):
+        """Тестеємо правильність накладання бафу Заточення на меч"""
+        # Задання початкових ресурсів, деколи ця частина повторюється і тому її краще винести в окремий зарезервовану функцію
+        rarity = 'White'
+        obj = SwordsSecond.create_with_rarity('Меч для тренуваня', rarity)
+        #print(f"ДЕБАГ: {obj.damage}")
+        buff = Buff(obj)
+        
+        # виклик тестованих компонентів
+        result = buff.sharpening()
+        #print(f"ДЕБАГ: {obj.damage}")
+        # тестування, перевірка результатів тверджень
+        self.assertIsInstance(result, str, "Повернене значення після накледення бафу не є стрічкою.")
+        self.assertTrue(len(result) >= 10, "Повернене значення після накладення бафу є дуже коротким.")
+        for attr in ['name', 'damage', 'vitality']:
+            # тут робиться перевірки чи існують атрибути і чи ми можемо їх в подальшому викликати
+            self.assertTrue(hasattr(buff, attr), "Атрибут не існує у об'єкті класу.")
+            # якщо будо застосовано баф то відповідні атрибути повинні бути відмінними від None
+            self.assertIsNotNone(getattr(buff, attr), f"Не задано атрибут {attr} при накладенні Бафу.")
+
+        self.assertIsInstance(getattr(buff, 'damage'), (int, float), "Значення Шкоди та Витривалості повинне бути чисельного типу.")
+        i = list(obj.rarity_map.keys()).index(rarity)
+        self.assertEqual(3 + i + getattr(buff, 'damage'), obj.damage, "Невірне розраховане значення Шкоди при складенні всіх компонентів.")
+        
+        # ми вже перевірили що атрибут name існує тому ми можемо його тут викликати
+        self.assertIsInstance(buff.name, str, "Імя накладеного бафу повинно бути стрічкою.")
+        self.assertEqual(buff.name, "Заточення", f"При застосування бафу Заточення було задано невірне імя {buff.name}.")
+
 
 class TestSwords(unittest.TestCase):
     pass
