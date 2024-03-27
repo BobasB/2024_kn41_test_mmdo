@@ -39,9 +39,9 @@ class Buff:
         if self.obj.buff:
             return "Неможливо накласти 2 Бафи"
         self.name = "Зачарування"
-        self.damage = 0
-        self.vitality = 5
-        self.obj.vitality += 5
+        self.damage = int(0)
+        self.vitality = int(5)
+        self.obj.vitality += self.vitality
         return self.__format_return_value()
     
     def crystals(self):
