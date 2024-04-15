@@ -17,5 +17,10 @@ def help():
     <p>Ви відвідали цю сторінку {count} разів</p>
     """
 
+# Екзамен
+@app.route('/info')
+def info():
+    return '<p>Ура я здав екзамен!</p>'
+
 if __name__ == '__main__':
     app.run(debug=True)
